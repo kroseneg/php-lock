@@ -36,8 +36,10 @@ abstract class Lock {
 	 */
 
 	final public function lock($key) {
-		$this->locks[$key] = true;
-		$this->do_lock($key);
+		if (!$this->locks[$key]) {
+			$this->locks[$key] = true;
+			$this->do_lock($key);
+		}
 	}
 
 	/**
@@ -45,8 +47,10 @@ abstract class Lock {
 	 */
 
 	final public function unlock($key) {
-		$this->do_unlock($key);
-		unset($this->locks[$key]);
+		if ($this->locks[$key]) {
+			$this->do_unlock($key);
+			unset($this->locks[$key]);
+		}
 	}
 
 
