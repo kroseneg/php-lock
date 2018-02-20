@@ -2,7 +2,7 @@
 abstract class Lock {
 
 	private $locks = array();
-	public $debug = !false;
+	public $debug = false;
 
 
 	/**
