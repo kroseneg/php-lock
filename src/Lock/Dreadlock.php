@@ -5,6 +5,7 @@ class Lock_Dreadlock extends Lock {
 	private $connected = false;
 	private $host = "127.0.0.1";
 	private $port = 6001;
+	public $useBase64 = true;
 
 	protected function __construct($data) {
 		foreach (array('host', 'port') as $key) {
@@ -90,6 +91,8 @@ class Lock_Dreadlock extends Lock {
 	protected function do_lock($obj) {
 		$this->debug("-- do_lock($obj)");
 
+		if ($this->useBase64) $obj = str_replace("=", "", base64_encode($obj));
+
 		$this->send("lock", $obj . " 30000");
 
 		list($op, $p) = $this->receive();
@@ -113,6 +116,8 @@ class Lock_Dreadlock extends Lock {
 	 */
 	protected function do_unlock($obj) {
 		$this->debug("-- do_unlock($obj)");
+
+		if ($this->useBase64) $obj = str_replace("=", "", base64_encode($obj));
 
 		$this->send("unlock", $obj);
 
