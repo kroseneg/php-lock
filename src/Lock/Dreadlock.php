@@ -32,7 +32,7 @@ class Lock_Dreadlock extends Lock {
 	private function connect() {
 		if (!$this->connected) {
 			$this->socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-#			socket_set_block($this->socket);
+			socket_set_block($this->socket);
 			$this->connected = socket_connect($this->socket, $this->host, $this->port);
 		}
 	}
@@ -69,8 +69,11 @@ class Lock_Dreadlock extends Lock {
 		}
 		
 		$read_data = "";
-		while (strlen($read_data) === 0) {
+		while (strlen($read_data) === 0 && $read_data !== false) {
 			$read_data = socket_read($this->socket, 256, PHP_NORMAL_READ);
+			if (($err = socket_last_error($this->socket)) !== 0) {
+				throw new Exception(socket_strerror($err) . " ($err)");
+			}
 			$read_data = trim($read_data);
 #			usleep(10);
 		}
