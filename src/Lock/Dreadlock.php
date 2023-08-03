@@ -91,9 +91,22 @@ class Lock_Dreadlock extends Lock {
 	protected function do_lock($obj) {
 		$this->debug("-- do_lock($obj)");
 
+		do {
+			$locked = $this->try_lock($obj, 300000);
+		} while (!$locked);
 		if ($this->useBase64) $obj = str_replace("=", "", base64_encode($obj));
 
-		$this->send("lock", $obj . " 30000");
+		return $locked;
+
+	}
+
+
+	protected function try_lock($obj, $timeout=30000) {
+		$this->debug("-- try_lock($obj)");
+
+		if ($this->useBase64) $obj = str_replace("=", "", base64_encode($obj));
+
+		$this->send("lock", $obj . " " . $timeout);
 
 		list($op, $p) = $this->receive();
 
