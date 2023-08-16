@@ -142,7 +142,8 @@ class Lock_OLD extends Lock {
 	 * Locks an object identified by the string 'obj'
 	 */
 	protected function do_lock($obj) {
-		print "-- do_lock($obj)\n";
+		$this->debug("-- do_lock($obj))";
+
 		$this->send(self::REQ_ACQ_LOCK, $obj);
 
 		list($op, $p) = $this->receive();
@@ -163,7 +164,7 @@ class Lock_OLD extends Lock {
 	 * Unlocks an object identified by the string 'obj'
 	 */
 	protected function do_unlock($obj) {
-		print "-- do_unlock($obj)\n";
+		$this->debug("-- do_unlock($obj)");
 
 		$this->send(self::REQ_REL_LOCK, $obj);
 
