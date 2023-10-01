@@ -107,7 +107,7 @@ class Lock_Dreadlock extends Lock {
 
 		if ($this->useBase64) $obj = str_replace("=", "", base64_encode($obj));
 
-		$this->send("lock", $obj . (!is_null($timeout) ? " " . $timeout : "");
+		$this->send("lock", $obj . (!is_null($timeout) ? " " . $timeout : ""));
 
 		list($op, $p) = $this->receive();
 
