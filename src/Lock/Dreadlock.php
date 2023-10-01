@@ -6,6 +6,7 @@ class Lock_Dreadlock extends Lock {
 	private $host = "127.0.0.1";
 	private $port = 6001;
 	public $useBase64 = true;
+	public $timeout = null;
 
 	protected function __construct($data) {
 		foreach (array('host', 'port') as $key) {
@@ -92,7 +93,7 @@ class Lock_Dreadlock extends Lock {
 		$this->debug("-- do_lock($obj)");
 
 		do {
-			$locked = $this->try_lock($obj, 300000);
+			$locked = $this->try_lock($obj, $this->timeout);
 		} while (!$locked);
 		if ($this->useBase64) $obj = str_replace("=", "", base64_encode($obj));
 
@@ -101,12 +102,12 @@ class Lock_Dreadlock extends Lock {
 	}
 
 
-	protected function try_lock($obj, $timeout=30000) {
+	protected function try_lock($obj, $timeout=null) {
 		$this->debug("-- try_lock($obj)");
 
 		if ($this->useBase64) $obj = str_replace("=", "", base64_encode($obj));
 
-		$this->send("lock", $obj . " " . $timeout);
+		$this->send("lock", $obj . (!is_null($timeout) ? " " . $timeout : "");
 
 		list($op, $p) = $this->receive();
 
